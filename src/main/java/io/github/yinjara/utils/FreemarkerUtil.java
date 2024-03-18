@@ -17,13 +17,16 @@ import java.util.Map;
 public class FreemarkerUtil {
 
     @Value("${file.ruleJarPath}")
-    private static String ruleFilePath;
+    public String ruleFilePath;
+
+    @Value("${file.freemarkerUrl}")
+    private String freemarkerPath;
 
 
     public Template getTemplate(String name) {
         try {
             Configuration configuration = new Configuration(Configuration.VERSION_2_3_0);
-            Resource resource = new ClassPathResource("/rules/template/");
+            Resource resource = new ClassPathResource(freemarkerPath);
             File file = resource.getFile();
             configuration.setDirectoryForTemplateLoading(file);
             Template template = configuration.getTemplate(name);

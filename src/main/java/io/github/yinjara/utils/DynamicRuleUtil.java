@@ -39,23 +39,23 @@ public class DynamicRuleUtil {
             map.put("qualityRuleType", list.get(i).getRuleType());
             map.put("qualityDefectName", list.get(i).getDefectName());
             map.put("qualityResult", list.get(i).getGrade());
-            if (list.get(i).getRuleType().equals("长度")) {
+            if ("长度".equals(list.get(i).getRuleType())) {
                 map.put("qualityLowerLimit", list.get(i).getLengthLowerLimit() + "");
                 map.put("qualityUpperLimit", list.get(i).getLengthUpperLimit() + "");
-            } else if (list.get(i).getRuleType().equals("宽度")) {
+            } else if ("宽度".equals(list.get(i).getRuleType())) {
                 map.put("qualityLowerLimit", list.get(i).getWidthLowerLimit() + "");
                 map.put("qualityUpperLimit", list.get(i).getWidthUpperLimit() + "");
-            } else if (list.get(i).getRuleType().equals("面积")) {
+            } else if ("面积".equals(list.get(i).getRuleType())) {
                 map.put("qualityLowerLimit", list.get(i).getAreaLowerLimit() + "");
                 map.put("qualityUpperLimit", list.get(i).getAreaUpperLimit() + "");
-            } else if (list.get(i).getRuleType().equals("密度")) {
+            } else if ("密度".equals(list.get(i).getRuleType())) {
                 map.put("qualityLowerLimit", list.get(i).getDensityLowerLimit() + "");
                 map.put("qualityUpperLimit", list.get(i).getDensityUpperLimit() + "");
             }
             String strCode = freemarkerUtil.generateString("SingleRule.ftl", map);
             returnMap.put(list.get(i).getRuleGroupName() + "SingleRule" + i + ".java", strCode);
         }
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             log.info("已生成{}规则组下的单缺陷判定规则源码，共{}条 ", list.get(0).getRuleGroupName(), returnMap.size());
         }
         return returnMap;
@@ -93,12 +93,21 @@ public class DynamicRuleUtil {
                                     .byteCode(manager.getClassBytes())
                                     .build();
                     compileResultList.add(compileResult);
+                } else {
+                    // 获取编译过程中产生的诊断信息
+                    List<Diagnostic<? extends JavaFileObject>> diagnostics = collector.getDiagnostics();
+
+                    // 遍历诊断信息并输出
+                    for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics) {
+                        // 输出诊断信息，可以根据具体情况进行处理
+                        System.err.println(diagnostic.getMessage(null));
+                    }
                 }
             } catch (IOException e) {
                 log.error("编译出错啦！", e);
             }
         }
-        log.info("成功编译数："+compileResultList.size());
+        log.info("成功编译数：" + compileResultList.size());
         return compileResultList;
     }
 

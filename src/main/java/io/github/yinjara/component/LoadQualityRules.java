@@ -28,17 +28,7 @@ public class LoadQualityRules implements ApplicationListener<ContextRefreshedEve
     @SneakyThrows
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        SingleDefectRule singleDefectRule = new SingleDefectRule();
-        singleDefectRule.setRuleId("1");
-        singleDefectRule.setRuleType("长度");
-        singleDefectRule.setDefectName("孔洞");
-        singleDefectRule.setLengthUpperLimit(5);
-        singleDefectRule.setAreaLowerLimit(3);
-
-
-        //TODO: 需改为测试数据
-        List<SingleDefectRule> singleDefectRuleList = new ArrayList<>();
-        singleDefectRuleList.add(singleDefectRule);
+        List<SingleDefectRule> singleDefectRuleList = getSingleDefectRules();
 
         Map<String, String> strCodeOfSingleRulesMap =
                 DynamicRuleUtil.generateSingleRuleString(singleDefectRuleList);
@@ -49,6 +39,21 @@ public class LoadQualityRules implements ApplicationListener<ContextRefreshedEve
         Rules singleRules = DynamicRuleUtil.getQualityEngineRules(compileResultListOfSingleRules);
         ruleGroupSingleRulesMap.put("单一缺陷判定规则", singleRules);
         log.info("规则引擎初始化完毕");
+    }
+    
+    private static List<SingleDefectRule> getSingleDefectRules() {
+        SingleDefectRule singleDefectRule = new SingleDefectRule();
+        singleDefectRule.setRuleGroupName("Default");
+        singleDefectRule.setRuleId("1");
+        singleDefectRule.setRuleType("长度");
+        singleDefectRule.setDefectName("孔洞");
+        singleDefectRule.setLengthUpperLimit(5);
+        singleDefectRule.setAreaLowerLimit(3);
+        singleDefectRule.setGrade("严重缺陷");
+
+        List<SingleDefectRule> singleDefectRuleList = new ArrayList<>();
+        singleDefectRuleList.add(singleDefectRule);
+        return singleDefectRuleList;
     }
 
     @Async

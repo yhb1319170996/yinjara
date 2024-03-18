@@ -1,0 +1,3 @@
+file:
+  ruleJarPath: "/rules"
+  freemarkerUrl: "/rules/template/"
